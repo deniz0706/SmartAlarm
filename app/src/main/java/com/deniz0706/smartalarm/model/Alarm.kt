@@ -1,6 +1,6 @@
-package com.deniz0707.smartalarm.model
+package com.deniz0706.smartalarm.model
 
 data class Alarm(
-  val saat: Int,
-  val dakika: Int
+    val saat: Int,
+    val dakika: Int
 )
