@@ -22,6 +22,8 @@ import java.time.LocalTime
 import androidx.compose.foundation.clickable
 import android.app.TimePickerDialog
 import androidx.compose.ui.platform.LocalContext
+import com.deniz0706.smartalarm.model.Alarm
+import androidx.compose.runtime.mutableStateListOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,13 +42,11 @@ private fun SmartAlarmScreen() {
   
     val simdikiZaman = LocalTime.now()
     val context = LocalContext.current
+    val alarmlar = remember { mutableStateListOf<Alarm>()}
   
-    var alarmSayisi by remember { mutableIntStateOf(0) }
     var alarmEklemeAcik by remember { mutableStateOf(false) }
     var saat by remember { mutableIntStateOf(simdikiZaman.hour) }
     var dakika by remember { mutableIntStateOf(simdikiZaman.minute) }
-    var kayitliSaat by remember { mutableIntStateOf(0) }
-    var kayitliDakika by remember { mutableIntStateOf(0) }
 
     if (alarmEklemeAcik) {
         Column {
@@ -54,9 +54,8 @@ private fun SmartAlarmScreen() {
 
             Button(
               onClick = {
-                alarmSayisi++
-                kayitliSaat = saat
-                kayitliDakika = dakika
+                alarmlar.add(Alarm(saat, dakika))
+                
                 alarmEklemeAcik = false
               }
             ){
@@ -101,14 +100,13 @@ private fun SmartAlarmScreen() {
             )
 
             Text(
-                text = "$alarmSayisi alarm kurulu",
+                text = "${alarmlar.size} alarm kurulu",
                 style = MaterialTheme.typography.bodyLarge,
             )
 
-            if (alarmSayisi > 0){
-              Text(
-                text = "${"%02d".format(kayitliSaat)}:${"%02d".format(kayitliDakika)}"
-              )
+            alarmlar.forEach { alarm ->
+
+              Text(text = "${alarm.saat}:${alarm.dakika}")
             }
 
             Button(
