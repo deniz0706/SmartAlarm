@@ -45,10 +45,23 @@ private fun SmartAlarmScreen() {
     var alarmEklemeAcik by remember { mutableStateOf(false) }
     var saat by remember { mutableIntStateOf(simdikiZaman.hour) }
     var dakika by remember { mutableIntStateOf(simdikiZaman.minute) }
+    var kayitliSaat by remember { mutableIntStateOf(0) }
+    var kayitliDakika by remember { mutableIntStateOf(0) }
 
     if (alarmEklemeAcik) {
         Column {
             Text("Alarm Oluştur")
+
+            Button(
+              onClick = {
+                alarmSayisi++
+                kayitliSaat = saat
+                kayitliDakika = dakika
+                alarmEklemeAcik = false
+              }
+            ){
+              Text("Alarmı Kaydet")
+            }
 
             Button(
                 onClick = {
@@ -74,28 +87,7 @@ private fun SmartAlarmScreen() {
                 
               }
             )
-            Button(
-              onClick = {
-                if (saat == 23){
-                  saat = 0
-                } else {
-                  saat++
-                }
-              }
-            ){
-              Text("Saat +")
-            }
-            Button(
-              onClick = {
-                if (dakika == 59){
-                  dakika = 0
-                } else {
-                  dakika++
-                }
-              }
-            ){
-              Text("Dakika +")
-            }
+            
         }
     } else {
         Column(
@@ -112,6 +104,12 @@ private fun SmartAlarmScreen() {
                 text = "$alarmSayisi alarm kurulu",
                 style = MaterialTheme.typography.bodyLarge,
             )
+
+            if (alarmSayisi > 0){
+              Text(
+                text = "${"%02d".format(kayitliSaat)}:${"%02d".format(kayitliDakika)}"
+              )
+            }
 
             Button(
                 onClick = {
