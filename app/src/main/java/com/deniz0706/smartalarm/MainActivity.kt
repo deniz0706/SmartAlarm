@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.material3.Switch
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import com.deniz0706.smartalarm.model.Alarm
 import java.time.LocalTime
-import androidx.compose.material3.Switch
 
 class MainActivity : ComponentActivity() {
 
@@ -109,6 +111,9 @@ private fun SmartAlarmScreen() {
 
             alarmlar.forEach { alarm ->
 
+              Row (
+                modifier = Modifier.fillMaxWidth()
+              ) {
                 Text(
                     text = "${"%02d".format(alarm.saat)}:${"%02d".format(alarm.dakika)}"
                 )
@@ -116,7 +121,9 @@ private fun SmartAlarmScreen() {
                 Switch(
                   checked = alarm.acikMi,
                   onCheckedChange = { yeniDeger ->
-                    alarm.acikMi = yeniDeger
+                    val yeniAlarm = alarm.copy(acikMi = yeniDeger)
+                    val index = alarmlar.indexOf(alarmlar)
+                    alarmlar[index] = yeniAlarm
                   }
                 )
 
@@ -128,7 +135,7 @@ private fun SmartAlarmScreen() {
                     Text("Sil")
                 }
             }
-
+        }
             Button(
                 onClick = {
                     alarmEklemeAcik = true
