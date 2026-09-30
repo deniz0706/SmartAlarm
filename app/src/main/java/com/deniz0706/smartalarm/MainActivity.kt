@@ -18,6 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import java.time.LocalTime
+import androidx.compose.foundation.clickable
+import android.app.TimePickerDialog
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +37,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun SmartAlarmScreen() {
+  
+    val simdikiZaman = LocalTime.now()
+    val context = LocalContext.current
+  
     var alarmSayisi by remember { mutableIntStateOf(0) }
     var alarmEklemeAcik by remember { mutableStateOf(false) }
+    var saat by remember { mutableIntStateOf(simdikiZaman.hour) }
+    var dakika by remember { mutableIntStateOf(simdikiZaman.minute) }
 
     if (alarmEklemeAcik) {
         Column {
@@ -46,6 +56,45 @@ private fun SmartAlarmScreen() {
                 }
             ) {
                 Text("Geri")
+            }
+            Text(
+              text = "${"%02d".format(saat)}:${"%02d".format(dakika)}",
+              style = MaterialTheme.typography.headlineLarge,
+              modifier = Modifier.clickable{
+                TimePickerDialog(
+                 context,
+                  {_, yeniSaat, yeniDakika ->
+                  saat = yeniSaat
+                  dakika = yeniDakika
+                  },
+                  saat,
+                  dakika,
+                  true
+                ).show()
+                
+              }
+            )
+            Button(
+              onClick = {
+                if (saat == 23){
+                  saat = 0
+                } else {
+                  saat++
+                }
+              }
+            ){
+              Text("Saat +")
+            }
+            Button(
+              onClick = {
+                if (dakika == 59){
+                  dakika = 0
+                } else {
+                  dakika++
+                }
+              }
+            ){
+              Text("Dakika +")
             }
         }
     } else {
